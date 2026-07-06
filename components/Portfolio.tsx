@@ -21,7 +21,7 @@ export default function Portfolio() {
   const projects = [
     {
       id: 1,
-      title: 'Medical Aesthetic Campaign',
+      title: 'Medical Aesthetic Campaigns',
       category: 'medical',
       views: '2.5K',
       duration: '0:45',
