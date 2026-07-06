@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-syne), sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback';
+}
+
+:root {
+  color-scheme: dark;
+  --background: 0 0 0;
+  --foreground: 245 245 245;
+  --card: 18 18 18;
+  --card-foreground: 245 245 245;
+  --popover: 18 18 18;
+  --popover-foreground: 245 245 245;
+  --primary: 220 38 38;
+  --primary-foreground: 255 255 255;
+  --secondary: 40 40 40;
+  --secondary-foreground: 245 245 245;
+  --muted: 255 255 255 / 0.08;
+  --muted-foreground: 170 170 170;
+  --accent: 220 38 38;
+  --accent-foreground: 255 255 255;
+  --destructive: 220 53 69;
+  --border: 220 38 38 / 0.2;
+  --input: 255 255 255 / 0.08;
+  --ring: 220 38 38;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@layer base {
+  * {
+    @apply transition-colors duration-300;
+  }
+  html {
+    font-family: var(--font-syne), sans-serif;
+    font-weight: 700;
+  }
+  body {
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.6s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .group-hover\:scale-110:group-hover {
+    transform: scale(1.1);
+  }
+
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
