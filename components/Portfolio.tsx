@@ -21,66 +21,48 @@ export default function Portfolio() {
   const projects = [
     {
       id: 1,
-      title: 'Medical Aesthetic Campaigns',
-      category: 'medical',
+      title: 'Personal Branding',
+      category: 'personal',
       views: '2.5K',
       duration: '0:45',
-      description: 'Short-form content for aesthetic clinic',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample1.mp4'
+      description: 'Personal brand storytelling video',
+      videoUrl: 'https://res.cloudinary.com/dfyoup4e5/video/upload/v1782218323/script_8_will_to_live_V4_nytjhl.mov'
     },
     {
       id: 2,
-      title: 'Fashion & Lifestyle',
-      category: 'lifestyle',
+      title: 'Explainer',
+      category: 'explainer',
       views: '3.2K',
       duration: '1:30',
-      description: 'Influencer collaboration reel',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample2.mp4'
+      description: 'Engaging explainer video',
+      videoUrl: 'https://res.cloudinary.com/dfyoup4e5/video/upload/v1782218244/07-03-26_abishek_v2_yzm6iz.mov'
     },
     {
       id: 3,
-      title: 'Automotive Showcase',
-      category: 'commercial',
-      views: '4.1K',
-      duration: '2:15',
-      description: 'Product showcase video',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample3.mp4'
-    },
-    {
-      id: 4,
-      title: 'Motion Graphics Bundle',
+      title: 'Motion Graphics',
       category: 'motion',
       views: '1.8K',
       duration: '1:00',
-      description: 'Explainer animation set',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample4.mp4'
+      description: 'Dynamic motion graphics set',
+      videoUrl: 'https://res.cloudinary.com/dfyoup4e5/video/upload/v1782202644/motion_graphics_lue4so.mp4'
     },
     {
-      id: 5,
-      title: 'Wedding Highlights',
-      category: 'lifestyle',
-      views: '2.9K',
-      duration: '3:45',
-      description: 'Cinematic wedding montage',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample5.mp4'
-    },
-    {
-      id: 6,
-      title: 'Luxury Resort Tour',
-      category: 'commercial',
-      views: '3.6K',
-      duration: '2:30',
-      description: 'Property showcase video',
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/v1634567890/sample6.mp4'
+      id: 4,
+      title: 'UGC Content',
+      category: 'ugc',
+      views: '4.1K',
+      duration: '0:30',
+      description: 'User-generated style content',
+      videoUrl: 'https://res.cloudinary.com/dfyoup4e5/video/upload/v1783414040/dermatologist_gj3o20.mov'
     }
   ];
 
   const filters = [
     { label: 'All', value: 'all' },
-    { label: 'Medical', value: 'medical' },
-    { label: 'Lifestyle', value: 'lifestyle' },
-    { label: 'Commercial', value: 'commercial' },
-    { label: 'Motion Graphics', value: 'motion' }
+    { label: 'Personal Branding', value: 'personal' },
+    { label: 'Explainer', value: 'explainer' },
+    { label: 'Motion Graphics', value: 'motion' },
+    { label: 'UGC Content', value: 'ugc' }
   ];
 
   const filtered = activeFilter === 'all'
