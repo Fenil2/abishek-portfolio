@@ -217,10 +217,6 @@
     animation: shimmer 2s infinite;
   }
 
-  .group-hover\:scale-110:group-hover {
-    transform: scale(1.1);
-  }
-
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
