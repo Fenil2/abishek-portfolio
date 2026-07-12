@@ -1,8 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { MdMail, MdPhone } from 'react-icons/md';
-import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { MdMail, MdPhone, MdPlayArrow } from 'react-icons/md';
+import { siteConfig } from '@/lib/site';
 
 export default function Footer() {
   const quickLinks = [
@@ -13,27 +14,26 @@ export default function Footer() {
     { label: 'Contact', href: '/contact' }
   ];
 
-  const socials = [
-    { icon: FaInstagram, url: '#' },
-    { icon: FaLinkedin, url: '#' },
-    { icon: FaYoutube, url: '#' }
+  const actionLinks = [
+    { icon: MdMail, label: 'Email', href: siteConfig.emailHref },
+    { icon: MdPhone, label: 'Call', href: siteConfig.phoneHref },
+    { icon: MdPlayArrow, label: 'Portfolio', href: siteConfig.ctas.portfolio },
   ];
 
   return (
-    <footer className="py-12 px-4 md:px-6 lg:px-8 border-t animate-fade-in-up" style={{ backgroundColor: '#000000', borderColor: 'rgba(220, 38, 38, 0.2)' }}>
+    <footer className="py-12 px-4 md:px-6 lg:px-8 border-t" style={{ backgroundColor: '#000000', borderColor: 'rgba(220, 38, 38, 0.2)' }}>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="text-2xl font-bold mb-4">
-              <span style={{ color: '#DC2626' }}>A.</span>
-              <span style={{ color: '#F5F5F5' }}>J</span>
-            </div>
+          <div data-reveal style={{ '--reveal-delay': '0s' } as React.CSSProperties}>
+            <Link href="/" className="mb-4 inline-block" aria-label="Abishek J home">
+              <Image src="/logo.png" alt="Abishek J logo" width={104} height={44} />
+            </Link>
             <p style={{ color: 'rgba(245, 245, 245, 0.7)' }} className="text-sm">
               Creative video editor crafting cinematic stories for brands and creators.
             </p>
           </div>
 
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div data-reveal style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}>
             <h3 className="font-bold mb-4" style={{ color: '#DC2626' }}>Quick Links</h3>
             <ul className="space-y-2">
               {quickLinks.map((link, index) => (
@@ -50,29 +50,38 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+          <div data-reveal style={{ '--reveal-delay': '0.2s' } as React.CSSProperties}>
             <h3 className="font-bold mb-4" style={{ color: '#DC2626' }}>Contact</h3>
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(245, 245, 245, 0.7)' }}>
+              <a
+                href={siteConfig.phoneHref}
+                className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
+                style={{ color: 'rgba(245, 245, 245, 0.7)' }}
+              >
                 <MdPhone size={18} />
-                <span>+91 9876543210</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm" style={{ color: 'rgba(245, 245, 245, 0.7)' }}>
+                <span>{siteConfig.phoneDisplay}</span>
+              </a>
+              <a
+                href={siteConfig.emailHref}
+                className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
+                style={{ color: 'rgba(245, 245, 245, 0.7)' }}
+              >
                 <MdMail size={18} />
-                <span>abishek@example.com</span>
-              </div>
+                <span>{siteConfig.email}</span>
+              </a>
             </div>
           </div>
 
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <h3 className="font-bold mb-4" style={{ color: '#DC2626' }}>Follow</h3>
+          <div data-reveal style={{ '--reveal-delay': '0.3s' } as React.CSSProperties}>
+            <h3 className="font-bold mb-4" style={{ color: '#DC2626' }}>Quick Actions</h3>
             <div className="flex gap-3">
-              {socials.map((social, index) => {
-                const Icon = social.icon;
+              {actionLinks.map((action, index) => {
+                const Icon = action.icon;
                 return (
-                  <a
+                  <Link
                     key={index}
-                    href={social.url}
+                    href={action.href}
+                    aria-label={action.label}
                     className="p-2 rounded-lg transition-all duration-300 hover:scale-110 inline-flex items-center justify-center"
                     style={{
                       backgroundColor: 'rgba(17, 17, 17, 0.92)',
@@ -81,7 +90,7 @@ export default function Footer() {
                     }}
                   >
                     <Icon size={20} />
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -93,8 +102,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-center md:text-left" style={{ color: 'rgba(245, 245, 245, 0.6)' }}>
           <p>&copy; 2025 Abishek.J. All rights reserved.</p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-            <Link href="#" className="hover:opacity-70 transition-opacity">Privacy Policy</Link>
-            <Link href="#" className="hover:opacity-70 transition-opacity">Terms of Service</Link>
+            <Link href={siteConfig.ctas.privacyPolicy} className="hover:opacity-70 transition-opacity">Privacy Policy</Link>
+            <Link href={siteConfig.ctas.termsOfService} className="hover:opacity-70 transition-opacity">Terms of Service</Link>
           </div>
         </div>
       </div>

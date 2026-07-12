@@ -43,14 +43,14 @@ export default function Skills() {
   return (
     <section id="skills" className="relative py-20 px-4 md:px-6 lg:px-8 md:py-32 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #000000, rgba(220, 38, 38, 0.08))' }}>
       <div className="max-w-7xl mx-auto">
-        <div className="mb-16 text-center animate-fade-in-up">
-          <div className="inline-block mb-4 px-4 py-2 rounded-full animate-scale-in" style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}>
+        <div className="mb-16 text-center" data-reveal>
+          <div className="inline-block mb-4 px-4 py-2 rounded-full" style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}>
             <span className="text-sm font-bold" style={{ color: '#DC2626' }}>EXPERTISE</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up" style={{ color: '#F5F5F5', animationDelay: '0.1s' }}>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#F5F5F5' }}>
             Tools & Expertise
           </h2>
-          <p className="text-lg animate-fade-in-up" style={{ color: 'rgba(245, 245, 245, 0.72)', animationDelay: '0.2s' }}>
+          <p className="text-lg" style={{ color: 'rgba(245, 245, 245, 0.72)' }}>
             Professional proficiency across industry-standard software and creative techniques
           </p>
         </div>
@@ -61,12 +61,13 @@ export default function Skills() {
             return (
               <div
                 key={index}
-                className="p-6 rounded-lg transition-all duration-300 hover:scale-105 cursor-pointer group animate-fade-in-up"
+                className="cine-card p-6 rounded-lg cursor-pointer group"
+                data-reveal
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   border: '1px solid rgba(220, 38, 38, 0.2)',
-                  animationDelay: `${index * 0.1}s`
-                }}
+                  '--reveal-delay': `${index * 0.1}s`
+                } as React.CSSProperties}
               >
                 <div className="mb-4 inline-block p-3 rounded-lg group-hover:scale-110 transition-transform" style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}>
                   <Icon size={24} style={{ color: '#DC2626' }} />
@@ -86,17 +87,27 @@ export default function Skills() {
         </div>
 
         <div className="mb-16">
-          <h3 className="text-2xl font-bold mb-8" style={{ color: '#F5F5F5' }}>Languages</h3>
+          <h3 className="text-2xl font-bold mb-8" style={{ color: '#F5F5F5' }} data-reveal>Languages</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {languages.map((lang, index) => (
-              <div key={index} className="p-6 rounded-lg" style={{ backgroundColor: 'rgba(17, 17, 17, 0.92)', border: '1px solid rgba(220, 38, 38, 0.2)' }}>
+              <div
+                key={index}
+                className="cine-card p-6 rounded-lg"
+                data-reveal
+                style={{
+                  backgroundColor: 'rgba(17, 17, 17, 0.92)',
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
+                  '--reveal-delay': `${index * 0.1}s`,
+                  '--level': `${lang.level}%`,
+                } as React.CSSProperties}
+              >
                 <div className="flex justify-between items-center mb-3">
                   <h4 className="font-bold" style={{ color: '#DC2626' }}>{lang.name}</h4>
                   <span className="text-sm" style={{ color: 'rgba(245, 245, 245, 0.7)' }}>{lang.level}%</span>
                 </div>
                 <div className="h-2 rounded-full" style={{ backgroundColor: 'rgba(255, 255, 255, 0.12)' }}>
                   <div
-                    className="h-full rounded-full transition-all duration-500"
+                    className="skill-bar h-full rounded-full"
                     style={{ width: `${lang.level}%`, backgroundColor: '#DC2626' }}
                   ></div>
                 </div>
@@ -109,11 +120,13 @@ export default function Skills() {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="p-6 text-center rounded-lg transition-all duration-300 hover:scale-105"
+              className="cine-card p-6 text-center rounded-lg"
+              data-reveal="scale"
               style={{
                 backgroundColor: 'rgba(17, 17, 17, 0.92)',
-                border: '1px solid rgba(220, 38, 38, 0.2)'
-              }}
+                border: '1px solid rgba(220, 38, 38, 0.2)',
+                '--reveal-delay': `${index * 0.08}s`
+              } as React.CSSProperties}
             >
               <div className="text-3xl md:text-4xl font-bold mb-2" style={{ color: '#DC2626' }}>
                 {stat.value}

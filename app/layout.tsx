@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist_Mono, Syne } from 'next/font/google'
+import CinematicFX from '@/components/CinematicFX'
 import './globals.css'
 
 const syne = Syne({
@@ -51,6 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${syne.variable} ${geistMono.variable}`}>
       <body className="antialiased bg-background text-foreground">
+        <CinematicFX />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

@@ -1,11 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import { siteConfig } from '@/lib/site';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const navLinks = [
     { label: 'About', href: '/about' },
@@ -15,11 +25,24 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 w-full backdrop-blur-lg z-50 transition-all duration-300" style={{ backgroundColor: 'rgba(0, 0, 0, 0.92)', borderBottom: '1px solid rgba(220, 38, 38, 0.2)' }}>
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold">
-          <span style={{ color: '#DC2626' }}>A.</span>
-          <span style={{ color: '#F5F5F5' }}>J</span>
+    <header
+      className="fixed top-0 w-full backdrop-blur-lg z-50 transition-all duration-500"
+      style={{
+        backgroundColor: scrolled ? 'rgba(0, 0, 0, 0.96)' : 'rgba(0, 0, 0, 0.72)',
+        borderBottom: '1px solid rgba(220, 38, 38, 0.2)',
+        boxShadow: scrolled ? '0 8px 30px -12px rgba(220, 38, 38, 0.4)' : 'none',
+      }}
+    >
+      <nav
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-500"
+        style={{ paddingTop: scrolled ? '0.6rem' : '1rem', paddingBottom: scrolled ? '0.6rem' : '1rem' }}
+      >
+        <Link
+          href="/"
+          className="transition-transform duration-300 hover:scale-105"
+          aria-label="Abishek J home"
+        >
+          <Image src="/logo.png" alt="Abishek J logo" width={104} height={44} priority />
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -27,15 +50,19 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="transition-colors duration-300 text-sm font-bold hover:opacity-70"
+              className="nav-underline text-sm font-bold"
               style={{ color: '#F5F5F5' }}
             >
               {link.label}
             </Link>
           ))}
-          <button className="px-6 py-2 rounded-lg font-bold transition-colors duration-300" style={{ backgroundColor: '#DC2626', color: '#FFFFFF' }}>
+          <Link
+            href={siteConfig.ctas.hireMe}
+            className="px-6 py-2 rounded-lg font-bold transition-colors duration-300"
+            style={{ backgroundColor: '#DC2626', color: '#FFFFFF' }}
+          >
             Hire Me
-          </button>
+          </Link>
         </div>
 
         <button
@@ -61,9 +88,14 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <button className="px-6 py-2 rounded-lg font-bold transition-colors duration-300 w-full" style={{ backgroundColor: '#DC2626', color: '#FFFFFF' }}>
+              <Link
+                href={siteConfig.ctas.hireMe}
+                className="w-full rounded-lg px-6 py-2 text-center font-bold transition-colors duration-300"
+                style={{ backgroundColor: '#DC2626', color: '#FFFFFF' }}
+                onClick={() => setIsOpen(false)}
+              >
                 Hire Me
-              </button>
+              </Link>
             </div>
           </div>
         )}

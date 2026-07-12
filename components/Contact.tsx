@@ -2,26 +2,49 @@
 
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { MdMail, MdPhone, MdLocationOn } from 'react-icons/md';
-import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import Link from 'next/link';
+import { MdMail, MdPhone, MdLocationOn, MdPlayArrow } from 'react-icons/md';
+import { siteConfig } from '@/lib/site';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
-    message: ''
+    phone: '',
+    message: '',
+    company: '', // honeypot - should stay empty
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+  const submitted = status === 'success';
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
+    if (status === 'submitting') return;
+
+    setStatus('submitting');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message.');
+      }
+
+      setStatus('success');
+      setFormData({ name: '', email: '', phone: '', message: '', company: '' });
+      setTimeout(() => setStatus('idle'), 4000);
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,59 +53,89 @@ export default function Contact() {
   };
 
   const contactMethods = [
-    { icon: MdPhone, label: 'Phone', value: '+91 9876543210' },
-    { icon: MdMail, label: 'Email', value: 'abishek@example.com' },
-    { icon: MdLocationOn, label: 'Location', value: 'Chennai, India' }
+    { icon: MdPhone, label: 'Phone', value: siteConfig.phoneDisplay, href: siteConfig.phoneHref },
+    { icon: MdMail, label: 'Email', value: siteConfig.email, href: siteConfig.emailHref },
+    { icon: MdLocationOn, label: 'Location', value: siteConfig.locationLabel, href: siteConfig.locationHref },
   ];
 
-  const socialLinks = [
-    { icon: FaInstagram, label: 'Instagram', url: '#' },
-    { icon: FaLinkedin, label: 'LinkedIn', url: '#' },
-    { icon: FaYoutube, label: 'YouTube', url: '#' }
+  const actionLinks = [
+    { icon: MdMail, label: 'Email', href: siteConfig.emailHref },
+    { icon: MdPhone, label: 'Call', href: siteConfig.phoneHref },
+    { icon: MdPlayArrow, label: 'Portfolio', href: siteConfig.ctas.portfolio },
   ];
 
   return (
-    <section id="contact" className="relative py-20 px-4 md:px-6 lg:px-8 md:py-32 overflow-hidden" style={{ backgroundColor: '#000000' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-16 text-center animate-fade-in-up">
-          <div className="inline-block mb-4 px-4 py-2 rounded-full animate-scale-in" style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}>
-            <span className="text-sm font-bold" style={{ color: '#DC2626' }}>GET IN TOUCH</span>
+    <section
+      id="contact"
+      className="relative overflow-hidden px-4 py-20 md:px-6 md:py-32 lg:px-8"
+      style={{ backgroundColor: '#000000' }}
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-16 text-center" data-reveal>
+          <div
+            className="mb-4 inline-block rounded-full px-4 py-2"
+            style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}
+          >
+            <span className="text-sm font-bold" style={{ color: '#DC2626' }}>
+              GET IN TOUCH
+            </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up" style={{ color: '#F5F5F5', animationDelay: '0.1s' }}>
+          <h2 className="mb-6 text-4xl font-bold md:text-5xl" style={{ color: '#F5F5F5' }}>
             Let&apos;s Create Something Amazing
           </h2>
-          <p className="text-lg max-w-2xl mx-auto animate-fade-in-up" style={{ color: 'rgba(245, 245, 245, 0.72)', animationDelay: '0.2s' }}>
+          <p className="mx-auto max-w-2xl text-lg" style={{ color: 'rgba(245, 245, 245, 0.72)' }}>
             Have a project in mind? Let&apos;s collaborate and bring your vision to life
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-16">
+        <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
           {contactMethods.map((method, index) => {
             const Icon = method.icon;
             return (
-              <div
+              <a
                 key={index}
-                className="p-8 rounded-lg text-center transition-all duration-300 hover:scale-105 animate-fade-in-up"
+                href={method.href}
+                className="cine-card block rounded-lg p-8 text-center transition-transform duration-300 hover:-translate-y-1"
+                data-reveal
+                target={method.label === 'Location' ? '_blank' : undefined}
+                rel={method.label === 'Location' ? 'noreferrer' : undefined}
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   border: '1px solid rgba(220, 38, 38, 0.2)',
-                  animationDelay: `${index * 0.1}s`
-                }}
+                  '--reveal-delay': `${index * 0.1}s`,
+                } as React.CSSProperties}
               >
-                <div className="inline-block p-4 rounded-lg mb-4" style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}>
+                <div
+                  className="mb-4 inline-block rounded-lg p-4"
+                  style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}
+                >
                   <Icon size={32} style={{ color: '#DC2626' }} />
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: '#DC2626' }}>{method.label}</h3>
+                <h3 className="mb-2 text-lg font-bold" style={{ color: '#DC2626' }}>
+                  {method.label}
+                </h3>
                 <p style={{ color: 'rgba(245, 245, 245, 0.8)' }}>{method.value}</p>
-              </div>
+              </a>
             );
           })}
         </div>
 
-        <div className="max-w-2xl mx-auto mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+        <div className="mx-auto mb-16 max-w-2xl" data-reveal>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot field - hidden from real users, catches bots */}
+            <input
+              type="text"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
+
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#DC2626' }}>
+              <label className="mb-2 block text-sm font-bold" style={{ color: '#DC2626' }}>
                 Full Name
               </label>
               <input
@@ -91,18 +144,18 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
+                className="w-full rounded-lg px-4 py-3 transition-all duration-300 focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   color: '#F5F5F5',
-                  border: '1px solid rgba(220, 38, 38, 0.2)'
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
                 }}
                 placeholder="Your name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#DC2626' }}>
+              <label className="mb-2 block text-sm font-bold" style={{ color: '#DC2626' }}>
                 Email Address
               </label>
               <input
@@ -111,38 +164,38 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
+                className="w-full rounded-lg px-4 py-3 transition-all duration-300 focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   color: '#F5F5F5',
-                  border: '1px solid rgba(220, 38, 38, 0.2)'
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
                 }}
                 placeholder="your.email@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#DC2626' }}>
-                Subject
+              <label className="mb-2 block text-sm font-bold" style={{ color: '#DC2626' }}>
+                Phone Number
               </label>
               <input
-                type="text"
-                name="subject"
-                value={formData.subject}
+                type="tel"
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
+                className="w-full rounded-lg px-4 py-3 transition-all duration-300 focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   color: '#F5F5F5',
-                  border: '1px solid rgba(220, 38, 38, 0.2)'
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
                 }}
-                placeholder="Project topic"
+                placeholder="Your phone number"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2" style={{ color: '#DC2626' }}>
+              <label className="mb-2 block text-sm font-bold" style={{ color: '#DC2626' }}>
                 Message
               </label>
               <textarea
@@ -151,47 +204,57 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows={6}
-                className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none"
+                className="w-full resize-none rounded-lg px-4 py-3 transition-all duration-300 focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   color: '#F5F5F5',
-                  border: '1px solid rgba(220, 38, 38, 0.2)'
+                  border: '1px solid rgba(220, 38, 38, 0.2)',
                 }}
                 placeholder="Tell me about your project..."
               />
             </div>
 
+            {status === 'error' && (
+              <p className="text-center text-sm font-bold" style={{ color: '#F87171' }}>
+                {errorMsg}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full py-4 rounded-lg font-bold transition-all duration-300 transform hover:scale-105"
+              className="w-full transform rounded-lg py-4 font-bold transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
               style={{
-                backgroundColor: submitted ? 'rgba(100, 200, 100, 0.8)' : '#DC2626',
-                color: '#FFFFFF'
+                backgroundColor: submitted ? 'rgba(100, 200, 100, 0.85)' : '#DC2626',
+                color: '#FFFFFF',
               }}
-              disabled={submitted}
+              disabled={status === 'submitting' || submitted}
             >
-              {submitted ? 'Message Sent Successfully!' : 'Send Message'}
+              {status === 'submitting'
+                ? 'Sending...'
+                : submitted
+                  ? 'Message Sent Successfully!'
+                  : 'Send Message'}
             </button>
           </form>
         </div>
 
-        <div className="flex justify-center gap-6">
-          {socialLinks.map((social, index) => {
-            const Icon = social.icon;
+        <div className="flex justify-center gap-6" data-reveal="scale">
+          {actionLinks.map((action, index) => {
+            const Icon = action.icon;
             return (
-              <a
+              <Link
                 key={index}
-                href={social.url}
-                aria-label={social.label}
-                className="p-4 rounded-lg transition-all duration-300 hover:scale-110 inline-flex items-center justify-center"
+                href={action.href}
+                aria-label={action.label}
+                className="inline-flex items-center justify-center rounded-lg p-4 transition-all duration-300 hover:-translate-y-1 hover:scale-110"
                 style={{
                   backgroundColor: 'rgba(17, 17, 17, 0.92)',
                   border: '1px solid rgba(220, 38, 38, 0.2)',
-                  color: '#DC2626'
+                  color: '#DC2626',
                 }}
               >
                 <Icon size={24} />
-              </a>
+              </Link>
             );
           })}
         </div>

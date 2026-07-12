@@ -1,0 +1,28 @@
+// Prisma schema for the Neon (PostgreSQL) database.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // Prisma 7: the connection URL lives in `prisma.config.ts` (for the CLI) and
+  // is supplied at runtime via a driver adapter in `lib/prisma.ts`.
+  provider = "postgresql"
+}
+
+/// A lead captured from the site contact form.
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  phone     String?
+  message   String
+  status    String   @default("new") // new | read | archived
+  source    String   @default("contact-form")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([status])
+}
