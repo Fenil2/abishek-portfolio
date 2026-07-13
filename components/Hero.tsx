@@ -47,9 +47,9 @@ export default function Hero() {
           <span className="text-sm font-bold" style={{ color: '#DC2626' }}>Creative Video Editor</span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance animate-fade-in-up" style={{ color: '#F5F5F5', animationDelay: '0.2s' }}>
+        <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-balance animate-fade-in-up" style={{ color: '#F5F5F5', animationDelay: '0.2s' }}>
           Cinematic Stories{' '}
-          <span className="text-shine" style={{ background: 'linear-gradient(to right, #DC2626, #F87171, #F3F3F3, #DC2626)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+          <span className="text-shine" style={{ color: '#dd2726', }}>
             Come Alive
           </span>
         </h1>
